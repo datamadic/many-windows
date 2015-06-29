@@ -19,19 +19,41 @@ document.querySelector('#mk-wind')
             frag = document.createDocumentFragment(),
             i = 0,
             runningOffsetX = 0,
-            runningOffsetY = 0;
+            runningOffsetY = 0,
+            behavior;
 
         for (; i < NUM_LADDERS; i++) {
             tmpLadder = ladder.cloneNode(true);
+            behavior = tmpLadder.querySelector('fin-hypergrid-behavior-json');
+            behavior.setFixedColumnCount(0);
 
             tmpLadder.querySelector('fin-hypergrid').addGlobalProperties(lnfOverrides)
-            tmpLadder.querySelector('fin-hypergrid-behavior-json').setData(generateRandomData());
+            behavior.setData(generateRandomData());
 
             tmpLadder.querySelector('.ladder-num').innerHTML = 'Ladder: ' + i;
 
             tmpLadder.style.left = runningOffsetX;
             tmpLadder.style.top = runningOffsetY;
             tmpLadder.style.display = 'block';
+
+			//get the cell cellProvider for altering cell renderers
+			var cellProvider = behavior.getCellProvider();
+			cellProvider.getCell = getCell.bind(cellProvider);
+
+			var props;
+	        props = behavior.getColumnProperties(1);
+	        props.bgColor = '#2565a2';
+	        props.fgColor = 'white';
+
+	        props = behavior.getColumnProperties(2);
+	        props.bgColor = '#c1c1c1';
+	        props.fgColor = 'black';
+
+	        props = behavior.getColumnProperties(3);
+	        props.bgColor = '#941e20';
+	        props.fgColor = 'white';
+
+
 
             runningOffsetX = (i && !(i % COLUMNS)) ? 0 : runningOffsetX + OFFSET_X;
             runningOffsetY += (i && !(i % COLUMNS)) ? OFFSET_Y : 0;
@@ -143,8 +165,11 @@ fin.desktop.main(function() {
 	var tmp = Array.prototype.forEach
 		.call(document.querySelectorAll('fin-hypergrid-behavior-json'),
 			function(behavior){
-				if (behavior.setData) {
+				if (behavior.setData && (~~((Math.random() * 10) % 2) )) {
 					behavior.setData(generateRandomData())
+
+
+
 				}
 			})
 	
@@ -217,3 +242,25 @@ function genLnfOverrides() {
         defaultFixedColumnWidth: 100
     }
 }
+
+
+
+//replace the main area's getCell functon
+function getCell(config) {
+    var renderer = this.cellCache.simpleCellRenderer;
+    config.halign = 'right';
+    var x = config.x;
+
+    if (x === 2) {
+    	if (config.value > 500) {
+    		config.fgColor = 'forestgreen';
+    	}
+    	if (config.value < 250) {
+    		config.fgColor = 'firebrick';
+    	}
+    	
+    }
+
+    renderer.config = config;
+    return renderer;
+};
