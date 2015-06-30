@@ -1,10 +1,8 @@
 var targetedElement, startingTrans, x, y, grid,
     OFFSET_X = 160,
     OFFSET_Y = 210,
-    __COLUMNS = 25,
-    __NUM_LADDERS = 200 + 1,
-    COLUMNS = 12,
-    NUM_LADDERS = 60 + 1,
+    COLUMNS = 20,
+    NUM_LADDERS = 200 + 1,
     lnfOverrides = genLnfOverrides();
 
 /**
@@ -109,7 +107,8 @@ document.addEventListener('mousemove', function(e) {
             xMovement,
             'px) translateY(',
             yMovement,
-            'px)'
+            'px)',
+            'translateZ(0)'
         ].join('');
 
         targetedElement.style.transform = movementString;
