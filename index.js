@@ -3,8 +3,8 @@ var targetedElement, startingTrans, x, y, grid,
     OFFSET_Y = 210,
     __COLUMNS = 25,
     __NUM_LADDERS = 200 + 1,
-    COLUMNS = 7,
-    NUM_LADDERS = 21 + 1,
+    COLUMNS = 12,
+    NUM_LADDERS = 60 + 1,
     lnfOverrides = genLnfOverrides();
 
 /**
@@ -145,20 +145,20 @@ fin.desktop.main(function() {
  * 	
  */
 
-// (function fakeTicks(){
+(function fakeTicks(){
 
-// 	var tmp = Array.prototype.forEach
-// 		.call(document.querySelectorAll('fin-hypergrid-behavior-json'),
-// 			function(behavior){
-// 				if (behavior.setData && (~~((Math.random() * 10) % 2) )) {
-// 					behavior.setData(generateRandomData())
-// 				}
-// 			})
+	var tmp = Array.prototype.forEach
+		.call(document.querySelectorAll('fin-hypergrid-behavior-json'),
+			function(behavior){
+				if (behavior.setData && (~~((Math.random() * 10) % 2) )) {
+					behavior.setData(generateRandomData())
+				}
+			})
 	
-// 	tmp = null;
+	tmp = null;
 
-// 	return setTimeout(requestAnimationFrame.bind(null, fakeTicks), 300); 
-// }())
+	return setTimeout(requestAnimationFrame.bind(null, fakeTicks), 300); 
+}())
 
 
 /**
