@@ -1,8 +1,10 @@
 var targetedElement, startingTrans, x, y, grid,
     OFFSET_X = 160,
     OFFSET_Y = 210,
-    COLUMNS = 25,
-    NUM_LADDERS = 200,
+    __COLUMNS = 25,
+    __NUM_LADDERS = 200 + 1,
+    COLUMNS = 7,
+    NUM_LADDERS = 21 + 1,
     lnfOverrides = genLnfOverrides();
 
 /**
@@ -14,19 +16,17 @@ var targetedElement, startingTrans, x, y, grid,
 document.querySelector('#mk-wind')
     .addEventListener('click', function(e) {
 
-        var tmpLadder,
+        var tmpLadder, behavior, cellProvider,
             ladder = document.querySelector('.ladder'),
             frag = document.createDocumentFragment(),
-            i = 0,
+            i = 1,
             runningOffsetX = 0,
-            runningOffsetY = 0,
-            behavior;
+            runningOffsetY = 0;
 
         for (; i < NUM_LADDERS; i++) {
             tmpLadder = ladder.cloneNode(true);
             behavior = tmpLadder.querySelector('fin-hypergrid-behavior-json');
-            behavior.setFixedColumnCount(0);
-
+            
             tmpLadder.querySelector('fin-hypergrid').addGlobalProperties(lnfOverrides)
             behavior.setData(generateRandomData());
 
@@ -36,24 +36,9 @@ document.querySelector('#mk-wind')
             tmpLadder.style.top = runningOffsetY;
             tmpLadder.style.display = 'block';
 
-			//get the cell cellProvider for altering cell renderers
-			var cellProvider = behavior.getCellProvider();
+			cellProvider = behavior.getCellProvider();
 			cellProvider.getCell = getCell.bind(cellProvider);
-
-			var props;
-	        props = behavior.getColumnProperties(1);
-	        props.bgColor = '#2565a2';
-	        props.fgColor = 'white';
-
-	        props = behavior.getColumnProperties(2);
-	        props.bgColor = '#c1c1c1';
-	        props.fgColor = 'black';
-
-	        props = behavior.getColumnProperties(3);
-	        props.bgColor = '#941e20';
-	        props.fgColor = 'white';
-
-
+            behavior.setFixedColumnCount(0);
 
             runningOffsetX = (i && !(i % COLUMNS)) ? 0 : runningOffsetX + OFFSET_X;
             runningOffsetY += (i && !(i % COLUMNS)) ? OFFSET_Y : 0;
@@ -160,23 +145,20 @@ fin.desktop.main(function() {
  * 	
  */
 
-(function fakeTicks(){
+// (function fakeTicks(){
 
-	var tmp = Array.prototype.forEach
-		.call(document.querySelectorAll('fin-hypergrid-behavior-json'),
-			function(behavior){
-				if (behavior.setData && (~~((Math.random() * 10) % 2) )) {
-					behavior.setData(generateRandomData())
-
-
-
-				}
-			})
+// 	var tmp = Array.prototype.forEach
+// 		.call(document.querySelectorAll('fin-hypergrid-behavior-json'),
+// 			function(behavior){
+// 				if (behavior.setData && (~~((Math.random() * 10) % 2) )) {
+// 					behavior.setData(generateRandomData())
+// 				}
+// 			})
 	
-	tmp = null;
+// 	tmp = null;
 
-	return requestAnimationFrame(fakeTicks);
-}())
+// 	return setTimeout(requestAnimationFrame.bind(null, fakeTicks), 300); 
+// }())
 
 
 /**
@@ -251,15 +233,55 @@ function getCell(config) {
     config.halign = 'right';
     var x = config.x;
 
-    if (x === 2) {
-    	if (config.value > 500) {
-    		config.fgColor = 'forestgreen';
-    	}
-    	if (config.value < 250) {
-    		config.fgColor = 'firebrick';
-    	}
+    // if (x === 2) {
     	
+    	
+    // }
+
+    switch (x) {
+        case 0:
+            {
+               config.bgColor = '#2565a2';
+            config.fgColor = 'white'; 
+            }
+            break;
+        case 1:
+            {}
+            break;
+            
+        case 2:
+            {
+                config.bgColor = '#c1c1c1';
+                config.fgColor = 'black';
+                if (config.value > 500) {
+                    config.fgColor = 'forestgreen';
+                }
+                if (config.value < 250) {
+                    config.fgColor = 'firebrick';
+                }
+            }
+            break;
+        case 3:
+            {
+                config.bgColor = '#941e20';
+                config.fgColor = 'white';
+            }
+            break;
+        default: break;
     }
+
+
+    // config = behavior.getColumnProperties(1);
+    // config.bgColor = '#2565a2';
+    // config.fgColor = 'white';
+
+    // config = behavior.getColumnProperties(2);
+    // config.bgColor = '#c1c1c1';
+    // config.fgColor = 'black';
+
+    // config = behavior.getColumnProperties(3);
+    // config.bgColor = '#941e20';
+    // config.fgColor = 'white';
 
     renderer.config = config;
     return renderer;
