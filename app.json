@@ -6,7 +6,7 @@
         "url": "http://local:8080/",
         "__url": "http://cdn.openfin.co/demos/alpha-mask/",
         "uuid": "o",
-        "autoShow": false,
+        "autoShow": true,
         "frame": true,
         "__alphaMask": {
             "red": 255,

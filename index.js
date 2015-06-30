@@ -11,6 +11,8 @@ var targetedElement, startingTrans, x, y, grid,
  * 	
  */
 
+var generalData = generateRandomData();
+
 document.querySelector('#mk-wind')
     .addEventListener('click', function(e) {
 
@@ -26,7 +28,7 @@ document.querySelector('#mk-wind')
             behavior = tmpLadder.querySelector('fin-hypergrid-behavior-json');
             
             tmpLadder.querySelector('fin-hypergrid').addGlobalProperties(lnfOverrides)
-            behavior.setData(generateRandomData());
+            behavior.setData(generalData);
 
             tmpLadder.querySelector('.ladder-num').innerHTML = 'Ladder: ' + i;
 
@@ -125,16 +127,16 @@ document.addEventListener('mousemove', function(e) {
  */
 
 fin.desktop.main(function() {
-    var win = fin.desktop.Window.getCurrent();
+    // var win = fin.desktop.Window.getCurrent();
 
-    fin.desktop.System.getMonitorInfo(function(monitorInfo) {
-        var mainWindow = fin.desktop.Window.getCurrent(),
-            rec = monitorInfo.primaryMonitor.availableRect;
+    // fin.desktop.System.getMonitorInfo(function(monitorInfo) {
+    //     var mainWindow = fin.desktop.Window.getCurrent(),
+    //         rec = monitorInfo.primaryMonitor.availableRect;
 
-        mainWindow.setBounds(rec.left, rec.top, rec.right - rec.left, rec.bottom - rec.top, function() {
-            mainWindow.show()
-        })
-    });
+    //     mainWindow.setBounds(rec.left, rec.top, rec.right - rec.left, rec.bottom - rec.top, function() {
+    //         mainWindow.show()
+    //     })
+    // });
 });
 
 
@@ -144,20 +146,34 @@ fin.desktop.main(function() {
  * 	
  */
 
+
+setTimeout(function(){
+
 (function fakeTicks(){
+    var currData;
 
-	var tmp = Array.prototype.forEach
-		.call(document.querySelectorAll('fin-hypergrid-behavior-json'),
-			function(behavior){
-				if (behavior.setData && (~~((Math.random() * 10) % 2) )) {
-					behavior.setData(generateRandomData())
-				}
-			})
-	
-	tmp = null;
+    var rowToChange = ~~(Math.random() * generalData.length),
+        randRow = randomRow();
 
-	return setTimeout(requestAnimationFrame.bind(null, fakeTicks), 300); 
-}())
+    generalData = generalData.slice();
+    generalData[rowToChange] = randRow;
+
+    var tmp = Array.prototype.forEach
+        .call(document.querySelectorAll('fin-hypergrid-behavior-json'),
+            function(behavior){
+
+                if (behavior.setData) {
+                    behavior.setData(generalData);
+                    //behavior.changed();
+                }
+            })
+    
+    tmp = null;
+
+    return setTimeout(requestAnimationFrame.bind(null, fakeTicks), 300); 
+}())  
+},5000);
+
 
 
 /**
